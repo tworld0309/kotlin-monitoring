@@ -1,0 +1,41 @@
+<configuration>
+    <property name="LOG_PATH" value="${LOG_PATH:-logs}"/>
+
+    <logger name="com.monitoring" level="DEBUG">
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+
+    <root level="OFF">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Console Appender -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg trace_id=%X{trace_id} span_id=%X{span_id}%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File Appender -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- 로그 파일의 위치와 이름 -->
+        <file>${LOG_PATH}/app.log</file>
+
+        <!-- 로그 파일 롤링 정책 -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_PATH}/app.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg trace_id=%X{trace_id} span_id=%X{span_id}%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Root Logger 설정: 로그를 콘솔과 파일에 동시에 출력 -->
+    <root level="DEBUG">
+        <appender-ref ref="STDOUT"/>
+        <appender-ref ref="FILE"/>
+    </root>
+
+</configuration>
